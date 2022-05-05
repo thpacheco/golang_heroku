@@ -38,7 +38,7 @@ func (c *userHandler) getUserIDByHeader(ctx *gin.Context) string {
 	token := c.jwtService.ValidateToken(header, ctx)
 
 	if token == nil {
-		response := response.BuildErrorResponse("Error", "Failed to validate token", obj.EmptyObj{})
+		response := response.BuildErrorResponse("Error", "Failed to validate token_", obj.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
 		return ""
 	}
