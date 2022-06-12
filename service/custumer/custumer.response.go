@@ -1,4 +1,4 @@
-package _product
+package _custumer
 
 import (
 	"github.com/thpacheco/golang_heroku/entity"

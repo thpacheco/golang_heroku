@@ -37,7 +37,7 @@ func (c *custumerService) All(custumerID string) (*[]_custumer.CustumerResponse,
 		return nil, err
 	}
 
-	custms := _custumer.NewProductArrayResponse(custumers)
+	custms := _custumer.NewCustumerArrayResponse(custumers)
 	return &custms, nil
 }
 
