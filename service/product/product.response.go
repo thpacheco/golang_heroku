@@ -1,8 +1,8 @@
 package _product
 
 import (
-	"github.com/ydhnwb/golang_heroku/entity"
-	_user "github.com/ydhnwb/golang_heroku/service/user"
+	"github.com/thpacheco/golang_heroku/entity"
+	_user "github.com/thpacheco/golang_heroku/service/user"
 )
 
 type ProductResponse struct {

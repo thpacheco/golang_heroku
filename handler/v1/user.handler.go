@@ -7,10 +7,10 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/ydhnwb/golang_heroku/common/obj"
-	"github.com/ydhnwb/golang_heroku/common/response"
-	"github.com/ydhnwb/golang_heroku/dto"
-	"github.com/ydhnwb/golang_heroku/service"
+	"github.com/thpacheco/golang_heroku/common/obj"
+	"github.com/thpacheco/golang_heroku/common/response"
+	"github.com/thpacheco/golang_heroku/dto"
+	"github.com/thpacheco/golang_heroku/service"
 )
 
 type UserHandler interface {

@@ -1,4 +1,4 @@
-module github.com/ydhnwb/golang_heroku
+module github.com/thpacheco/golang_heroku
 
 // +heroku goVersion go1.15
 go 1.15

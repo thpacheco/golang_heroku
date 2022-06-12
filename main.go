@@ -3,25 +3,28 @@ package main
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/ydhnwb/golang_heroku/config"
-	v1 "github.com/ydhnwb/golang_heroku/handler/v1"
-	"github.com/ydhnwb/golang_heroku/middleware"
-	"github.com/ydhnwb/golang_heroku/repo"
-	"github.com/ydhnwb/golang_heroku/service"
+	"github.com/thpacheco/golang_heroku/config"
+	v1 "github.com/thpacheco/golang_heroku/handler/v1"
+	"github.com/thpacheco/golang_heroku/middleware"
+	"github.com/thpacheco/golang_heroku/repo"
+	"github.com/thpacheco/golang_heroku/service"
 	"gorm.io/gorm"
 )
 
 var (
-	db             *gorm.DB               = config.SetupDatabaseConnection()
-	userRepo       repo.UserRepository    = repo.NewUserRepo(db)
-	productRepo    repo.ProductRepository = repo.NewProductRepo(db)
-	authService    service.AuthService    = service.NewAuthService(userRepo)
-	jwtService     service.JWTService     = service.NewJWTService()
-	userService    service.UserService    = service.NewUserService(userRepo)
-	productService service.ProductService = service.NewProductService(productRepo)
-	authHandler    v1.AuthHandler         = v1.NewAuthHandler(authService, jwtService, userService)
-	userHandler    v1.UserHandler         = v1.NewUserHandler(userService, jwtService)
-	productHandler v1.ProductHandler      = v1.NewProductHandler(productService, jwtService)
+	db              *gorm.DB                = config.SetupDatabaseConnection()
+	userRepo        repo.UserRepository     = repo.NewUserRepo(db)
+	productRepo     repo.ProductRepository  = repo.NewProductRepo(db)
+	custumerRepo    repo.CustumerRepository = repo.NewCustumerRepo(db)
+	authService     service.AuthService     = service.NewAuthService(userRepo)
+	jwtService      service.JWTService      = service.NewJWTService()
+	userService     service.UserService     = service.NewUserService(userRepo)
+	productService  service.ProductService  = service.NewProductService(productRepo)
+	custumerService service.CustumerService = service.NewCustumerService(custumerRepo)
+	authHandler     v1.AuthHandler          = v1.NewAuthHandler(authService, jwtService, userService)
+	userHandler     v1.UserHandler          = v1.NewUserHandler(userService, jwtService)
+	productHandler  v1.ProductHandler       = v1.NewProductHandler(productService, jwtService)
+	custumerHandler v1.CustumerHandler      = v1.NewCustumerHandler(custumerService, jwtService)
 )
 
 func main() {
@@ -48,6 +51,14 @@ func main() {
 		productRoutes.GET("/:id", productHandler.FindOneProductByID)
 		productRoutes.PUT("/:id", productHandler.UpdateProduct)
 		productRoutes.DELETE("/:id", productHandler.DeleteProduct)
+	}
+	custumerRoutes := server.Group("api/custumer", middleware.AuthorizeJWT(jwtService))
+	{
+		custumerRoutes.GET("/", custumerHandler.All)
+		custumerRoutes.POST("/", custumerHandler.Createcustumer)
+		custumerRoutes.GET("/:id", custumerHandler.FindOnecustumerByID)
+		custumerRoutes.PUT("/:id", custumerHandler.Updatecustumer)
+		custumerRoutes.DELETE("/:id", custumerHandler.Deletecustumer)
 	}
 
 	checkRoutes := server.Group("api/check")

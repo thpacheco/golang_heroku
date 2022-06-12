@@ -7,11 +7,11 @@ import (
 	"strconv"
 
 	"github.com/mashingan/smapping"
-	"github.com/ydhnwb/golang_heroku/dto"
-	"github.com/ydhnwb/golang_heroku/entity"
-	"github.com/ydhnwb/golang_heroku/repo"
+	"github.com/thpacheco/golang_heroku/dto"
+	"github.com/thpacheco/golang_heroku/entity"
+	"github.com/thpacheco/golang_heroku/repo"
 
-	_product "github.com/ydhnwb/golang_heroku/service/product"
+	_product "github.com/thpacheco/golang_heroku/service/product"
 )
 
 type ProductService interface {
