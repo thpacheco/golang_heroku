@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -39,8 +38,9 @@ func (c *custumerHandler) All(ctx *gin.Context) {
 	token := c.jwtService.ValidateToken(authHeader, ctx)
 	claims := token.Claims.(jwt.MapClaims)
 	userID := fmt.Sprintf("%v", claims["user_id"])
+	println(userID)
 
-	custumers, err := c.custumerService.All(userID)
+	custumers, err := c.custumerService.All()
 	if err != nil {
 		response := response.BuildErrorResponse("Failed to process request", err.Error(), obj.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
@@ -53,7 +53,6 @@ func (c *custumerHandler) All(ctx *gin.Context) {
 
 func (c *custumerHandler) Createcustumer(ctx *gin.Context) {
 	var createcustumerReq dto.CreateCustumerRequest
-	createcustumerReq.DataInicio = time.Now().Local().String()
 
 	err := ctx.ShouldBind(&createcustumerReq)
 
