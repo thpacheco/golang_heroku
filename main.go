@@ -31,7 +31,6 @@ func main() {
 	defer config.CloseDatabaseConnection(db)
 	server := gin.Default()
 	server.Use(cors.Default())
-
 	authRoutes := server.Group("api/auth")
 	{
 		authRoutes.POST("/login", authHandler.Login)
