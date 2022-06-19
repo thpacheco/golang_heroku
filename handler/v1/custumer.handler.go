@@ -37,8 +37,8 @@ func (c *custumerHandler) All(ctx *gin.Context) {
 	authHeader := ctx.GetHeader("Authorization")
 	token := c.jwtService.ValidateToken(authHeader, ctx)
 	claims := token.Claims.(jwt.MapClaims)
-	userID := fmt.Sprintf("%v", claims["user_id"])
-	println(userID)
+
+	println(claims)
 
 	custumers, err := c.custumerService.All()
 	if err != nil {
@@ -124,11 +124,12 @@ func (c *custumerHandler) Updatecustumer(ctx *gin.Context) {
 	authHeader := ctx.GetHeader("Authorization")
 	token := c.jwtService.ValidateToken(authHeader, ctx)
 	claims := token.Claims.(jwt.MapClaims)
-	userID := fmt.Sprintf("%v", claims["user_id"])
+	fmt.Sprintln(claims["user_id"])
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 0, 64)
+	idCustumer := ctx.Param("id")
 	updatecustumerRequest.ID = id
-	custumer, err := c.custumerService.UpdateCustumer(updatecustumerRequest, userID)
+	custumer, err := c.custumerService.UpdateCustumer(updatecustumerRequest, idCustumer)
 	if err != nil {
 		response := response.BuildErrorResponse("Failed to process request", err.Error(), obj.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, response)

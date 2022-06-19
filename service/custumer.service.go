@@ -46,7 +46,7 @@ func (c *custumerService) CreateCustumer(custumerRequest dto.CreateCustumerReque
 	custumer := entity.Custumer{}
 	err := smapping.FillStruct(&custumer, smapping.MapFields(&custumerRequest))
 
-	custumer.DataStart = time.Now().String()
+	custumer.DataStart = time.Now().Format("01-05-2006")
 
 	if err != nil {
 		log.Fatalf("Failed map %v", err)

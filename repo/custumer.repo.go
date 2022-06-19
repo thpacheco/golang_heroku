@@ -1,6 +1,8 @@
 package repo
 
 import (
+	"fmt"
+
 	"github.com/thpacheco/golang_heroku/entity"
 	"gorm.io/gorm"
 )
@@ -25,9 +27,13 @@ func NewCustumerRepo(connection *gorm.DB) CustumerRepository {
 }
 
 func (c *custumerRepo) All() ([]entity.Custumer, error) {
-	custumers := []entity.Custumer{}
-	c.connection.Preload("Custumers").Find(&custumers).Find(&custumers)
+	var custumers []entity.Custumer
+	c.connection.Find(&custumers)
+
+	fmt.Println("{}", custumers)
+
 	return custumers, nil
+
 }
 
 func (c *custumerRepo) InsertCustumer(custumer entity.Custumer) (entity.Custumer, error) {
@@ -44,7 +50,7 @@ func (c *custumerRepo) UpdateCustumer(custumer entity.Custumer) (entity.Custumer
 
 func (c *custumerRepo) FindOneCustumerByID(custumerID string) (entity.Custumer, error) {
 	var custumer entity.Custumer
-	res := c.connection.Preload("Custumers").Where("id = ?", custumerID).Take(&custumer)
+	res := c.connection.Where("id = ?", custumerID).Find(&custumer)
 	if res.Error != nil {
 		return custumer, res.Error
 	}
