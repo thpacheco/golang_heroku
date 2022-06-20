@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/thpacheco/golang_heroku/config"
 	v1 "github.com/thpacheco/golang_heroku/handler/v1"
@@ -30,7 +29,8 @@ var (
 func main() {
 	defer config.CloseDatabaseConnection(db)
 	server := gin.Default()
-	server.Use(cors.Default())
+	server.Use(CORSMiddleware())
+
 	authRoutes := server.Group("api/auth")
 	{
 		authRoutes.POST("/login", authHandler.Login)
@@ -66,4 +66,21 @@ func main() {
 	}
 
 	server.Run()
+}
+
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Credentials", "true")
+		c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Header("Access-Control-Allow-Methods", "POST,HEAD,PATCH, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }
