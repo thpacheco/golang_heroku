@@ -20,6 +20,7 @@ type CustumerService interface {
 	UpdateCustumer(updateCustumerRequest dto.UpdateCustumerRequest, userID string) (*_custumer.CustumerResponse, error)
 	FindOneCustumerByID(custumerID string) (*_custumer.CustumerResponse, error)
 	DeleteCustumer(custumerID string, ID string) error
+	CountAllCustumer() int64
 }
 
 type custumerService struct {
@@ -117,4 +118,10 @@ func (c *custumerService) DeleteCustumer(custumerID string, ID string) error {
 	c.custumerRepo.DeleteCustumer(custumerID)
 	return nil
 
+}
+
+func (c *custumerService) CountAllCustumer() int64 {
+	custumer := c.custumerRepo.CountAllCustumer()
+
+	return custumer
 }

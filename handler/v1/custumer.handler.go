@@ -19,6 +19,7 @@ type CustumerHandler interface {
 	Updatecustumer(ctx *gin.Context)
 	Deletecustumer(ctx *gin.Context)
 	FindOnecustumerByID(ctx *gin.Context)
+	CountAllCustumer(ctx *gin.Context)
 }
 
 type custumerHandler struct {
@@ -99,9 +100,9 @@ func (c *custumerHandler) Deletecustumer(ctx *gin.Context) {
 	authHeader := ctx.GetHeader("Authorization")
 	token := c.jwtService.ValidateToken(authHeader, ctx)
 	claims := token.Claims.(jwt.MapClaims)
-	userID := fmt.Sprintf("%v", claims["user_id"])
+	fmt.Sprintf("%v", claims["user_id"])
 
-	err := c.custumerService.DeleteCustumer(id, userID)
+	err := c.custumerService.DeleteCustumer(id, id)
 	if err != nil {
 		response := response.BuildErrorResponse("Failed to process request", err.Error(), obj.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
@@ -139,4 +140,22 @@ func (c *custumerHandler) Updatecustumer(ctx *gin.Context) {
 	response := response.BuildResponse(true, "OK!", custumer)
 	ctx.JSON(http.StatusOK, response)
 
+}
+
+func (c *custumerHandler) CountAllCustumer(ctx *gin.Context) {
+
+	authHeader := ctx.GetHeader("Authorization")
+	token := c.jwtService.ValidateToken(authHeader, ctx)
+	claims := token.Claims.(jwt.MapClaims)
+	fmt.Sprintf("%v", claims["user_id"])
+
+	countCustumer := c.custumerService.CountAllCustumer()
+	// if countCustumer == 0 {
+	// 	response := response.BuildErrorResponse("Failed to process request", "Nenhum cliente encontrado", obj.EmptyObj{})
+	// 	ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+	// 	return
+	// }
+
+	response := response.BuildResponse(true, "OK!", countCustumer)
+	ctx.JSON(http.StatusOK, response)
 }

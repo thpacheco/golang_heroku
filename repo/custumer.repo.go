@@ -14,6 +14,7 @@ type CustumerRepository interface {
 	DeleteCustumer(custumerID string) error
 	FindOneCustumerByID(ID string) (entity.Custumer, error)
 	FindAllCustumer(custumerID string) ([]entity.Custumer, error)
+	CountAllCustumer() int64
 }
 
 type custumerRepo struct {
@@ -65,10 +66,23 @@ func (c *custumerRepo) FindAllCustumer(custumerID string) ([]entity.Custumer, er
 
 func (c *custumerRepo) DeleteCustumer(custumerID string) error {
 	var custumer entity.Custumer
-	res := c.connection.Preload("Custumers").Where("id = ?", custumerID).Take(&custumer)
+	res := c.connection.Where("id = ?", custumerID).Find(&custumer)
 	if res.Error != nil {
 		return res.Error
 	}
 	c.connection.Delete(&custumer)
 	return nil
+}
+
+func (c *custumerRepo) CountAllCustumer() int64 {
+	var custumers []entity.Custumer
+	var count int64
+
+	res := c.connection.Find(&custumers).Count(&count)
+
+	if res.Error != nil {
+		return 0
+	}
+
+	return count
 }
