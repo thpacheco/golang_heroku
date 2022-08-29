@@ -2,9 +2,9 @@ name: adoleta_api
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
 
@@ -34,4 +34,3 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: adoleta_go_api
         environment_name: Adoletagoapi-env
-        region: us-east-1
