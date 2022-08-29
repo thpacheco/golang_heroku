@@ -1,17 +1,20 @@
 package repo
 
 import (
+	"fmt"
+
 	"github.com/thpacheco/golang_heroku/entity"
 	"gorm.io/gorm"
 )
 
 type CustumerRepository interface {
-	All(userID string) ([]entity.Custumer, error)
+	All() ([]entity.Custumer, error)
 	InsertCustumer(custumer entity.Custumer) (entity.Custumer, error)
 	UpdateCustumer(custumer entity.Custumer) (entity.Custumer, error)
 	DeleteCustumer(custumerID string) error
 	FindOneCustumerByID(ID string) (entity.Custumer, error)
 	FindAllCustumer(custumerID string) ([]entity.Custumer, error)
+	CountAllCustumer() int64
 }
 
 type custumerRepo struct {
@@ -24,27 +27,31 @@ func NewCustumerRepo(connection *gorm.DB) CustumerRepository {
 	}
 }
 
-func (c *custumerRepo) All(userID string) ([]entity.Custumer, error) {
-	custumers := []entity.Custumer{}
-	c.connection.Preload("Custumer").Where("user_id = ?", userID).Find(&custumers)
+func (c *custumerRepo) All() ([]entity.Custumer, error) {
+	var custumers []entity.Custumer
+	c.connection.Find(&custumers)
+
+	fmt.Println("{}", custumers)
+
 	return custumers, nil
+
 }
 
 func (c *custumerRepo) InsertCustumer(custumer entity.Custumer) (entity.Custumer, error) {
 	c.connection.Save(&custumer)
-	c.connection.Preload("Custumer").Find(&custumer)
+	c.connection.Preload("Custumers").Find(&custumer)
 	return custumer, nil
 }
 
 func (c *custumerRepo) UpdateCustumer(custumer entity.Custumer) (entity.Custumer, error) {
 	c.connection.Save(&custumer)
-	c.connection.Preload("Custumer").Find(&custumer)
+	c.connection.Preload("Custumers").Find(&custumer)
 	return custumer, nil
 }
 
 func (c *custumerRepo) FindOneCustumerByID(custumerID string) (entity.Custumer, error) {
 	var custumer entity.Custumer
-	res := c.connection.Preload("Custumer").Where("id = ?", custumerID).Take(&custumer)
+	res := c.connection.Where("id = ?", custumerID).Find(&custumer)
 	if res.Error != nil {
 		return custumer, res.Error
 	}
@@ -59,10 +66,23 @@ func (c *custumerRepo) FindAllCustumer(custumerID string) ([]entity.Custumer, er
 
 func (c *custumerRepo) DeleteCustumer(custumerID string) error {
 	var custumer entity.Custumer
-	res := c.connection.Preload("Custumer").Where("id = ?", custumerID).Take(&custumer)
+	res := c.connection.Where("id = ?", custumerID).Find(&custumer)
 	if res.Error != nil {
 		return res.Error
 	}
 	c.connection.Delete(&custumer)
 	return nil
+}
+
+func (c *custumerRepo) CountAllCustumer() int64 {
+	var custumers []entity.Custumer
+	var count int64
+
+	res := c.connection.Find(&custumers).Count(&count)
+
+	if res.Error != nil {
+		return 0
+	}
+
+	return count
 }

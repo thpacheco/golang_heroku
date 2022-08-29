@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/mashingan/smapping"
 	"github.com/thpacheco/golang_heroku/dto"
@@ -14,11 +15,12 @@ import (
 )
 
 type CustumerService interface {
-	All(userID string) (*[]_custumer.CustumerResponse, error)
+	All() (*[]_custumer.CustumerResponse, error)
 	CreateCustumer(custumerRequest dto.CreateCustumerRequest, userID string) (*_custumer.CustumerResponse, error)
 	UpdateCustumer(updateCustumerRequest dto.UpdateCustumerRequest, userID string) (*_custumer.CustumerResponse, error)
 	FindOneCustumerByID(custumerID string) (*_custumer.CustumerResponse, error)
 	DeleteCustumer(custumerID string, ID string) error
+	CountAllCustumer() int64
 }
 
 type custumerService struct {
@@ -31,13 +33,13 @@ func NewCustumerService(custumerRepo repo.CustumerRepository) CustumerService {
 	}
 }
 
-func (c *custumerService) All(custumerID string) (*[]_custumer.CustumerResponse, error) {
-	custumers, err := c.custumerRepo.All(custumerID)
+func (c *custumerService) All() (*[]_custumer.CustumerResponse, error) {
+	custumers, err := c.custumerRepo.All()
 	if err != nil {
 		return nil, err
 	}
 
-	custms := _custumer.NewProductArrayResponse(custumers)
+	custms := _custumer.NewCustumerArrayResponse(custumers)
 	return &custms, nil
 }
 
@@ -45,13 +47,15 @@ func (c *custumerService) CreateCustumer(custumerRequest dto.CreateCustumerReque
 	custumer := entity.Custumer{}
 	err := smapping.FillStruct(&custumer, smapping.MapFields(&custumerRequest))
 
+	custumer.DataStart = time.Now().Format("01-05-2006")
+
 	if err != nil {
 		log.Fatalf("Failed map %v", err)
 		return nil, err
 	}
 
-	id, _ := strconv.ParseInt(userID, 0, 64)
-	custumer.ID = id
+	// id, _ := strconv.ParseInt(userID, 0, 64)
+	// custumer.ID = 0
 	p, err := c.custumerRepo.InsertCustumer(custumer)
 	if err != nil {
 		return nil, err
@@ -114,4 +118,10 @@ func (c *custumerService) DeleteCustumer(custumerID string, ID string) error {
 	c.custumerRepo.DeleteCustumer(custumerID)
 	return nil
 
+}
+
+func (c *custumerService) CountAllCustumer() int64 {
+	custumer := c.custumerRepo.CountAllCustumer()
+
+	return custumer
 }

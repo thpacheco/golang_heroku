@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-//SetupDatabaseConnection is creating a new connection to our database
+// SetupDatabaseConnection is creating a new connection to our database
 func SetupDatabaseConnection() *gorm.DB {
 	// errEnv := godotenv.Load()
 	// if errEnv != nil {
@@ -28,12 +28,12 @@ func SetupDatabaseConnection() *gorm.DB {
 		panic("Failed to create a connection to database")
 	}
 
-	db.AutoMigrate(&entity.User{}, &entity.Product{})
+	db.AutoMigrate(&entity.User{}, &entity.Product{}, &entity.Custumer{})
 	println("Database connected!")
 	return db
 }
 
-//CloseDatabaseConnection method is closing a connection between your app and your db
+// CloseDatabaseConnection method is closing a connection between your app and your db
 func CloseDatabaseConnection(db *gorm.DB) {
 	dbSQL, err := db.DB()
 	if err != nil {
