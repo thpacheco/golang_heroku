@@ -36,4 +36,4 @@ jobs:
         environment_name: Adoletagoapi-env
         version_label: ${{ github.sha }}
         region: us-east-1
-        deployment_package: src/deploy.zip
+        deployment_package: deploy.zip
