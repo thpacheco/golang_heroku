@@ -35,5 +35,3 @@ jobs:
         application_name: adoleta_go_api
         environment_name: Adoletagoapi-env
         region: us-east-1
-        version_label: ${{ github.run_id }}
-        version_description: ${{ github.sha }}
