@@ -24,11 +24,12 @@ jobs:
     - name: Test
       run: go test -v ./...
 
-    - name: Zip Package
-      run: |
-        cd ${{ github.workspace }}/out 
-        zip -r ${{ github.workspace }}/out.zip *
-        
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
+    - name: Generate deployment package
+      run: zip -r deploy.zip . -x '*.git*'
+
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v20
       with:
@@ -36,5 +37,6 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: adoleta_go_api
         environment_name: Adoletagoapi-env
-        region: us-east-1
         version_label: ${{ github.run_id }}
+        region: us-east-1
+        deployment_package: deploy.zip
