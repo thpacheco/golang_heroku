@@ -17,7 +17,11 @@ jobs:
       uses: actions/setup-go@v3
       with:
         go-version: 1.18
-
+        go-version-file: 'path/to/go.mod'
+    
+    - name: Run Application
+      run: go run application.go
+      
     - name: Build
       run: go build -v ./...
 
